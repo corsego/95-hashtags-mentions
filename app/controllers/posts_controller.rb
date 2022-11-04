@@ -3,7 +3,12 @@ class PostsController < ApplicationController
 
   # GET /posts or /posts.json
   def index
-    @posts = Post.all
+    posts = Post.order(created_at: :desc)
+    @posts = if params[:search].present?
+               posts.where('body ILIKE ?', "%#{params[:search]}%")
+             else
+               posts
+             end
   end
 
   # GET /posts/1 or /posts/1.json
